@@ -1,0 +1,43 @@
+{
+  "month": "Aug-22",
+  "grants": {
+    "ComfortIV": {
+      "projectId": "00000012_00000016",
+      "fullName": "Cushions for Comfort phase IV",
+      "colour": "#FF8DC0",
+      "start": "01-Oct-22",
+      "end": "29-Jun-23",
+      "awarded": {
+        "Salary": 100000.0,
+        "Travel": 10000.0,
+        "Equipment": 0,
+        "Consumables": 0
+      },
+      "spent": {
+        "Salary": 20000.0,
+        "Travel": 2000.0,
+        "Equipment": 0,
+        "Consumables": 0
+      }
+    },
+    "MedievalVII": {
+      "projectId": "00000022_00000026",
+      "fullName": "Medieval dog activities phase VII",
+      "colour": "#00FFF0",
+      "start": "01-Jan-22",
+      "end": "29-Jun-24",
+      "awarded": {
+        "Salary": 300000.0,
+        "Travel": 40000.0,
+        "Equipment": 10000.0,
+        "Consumables": 20000.0
+      },
+      "spent": {
+        "Salary": 20000.0,
+        "Travel": 1000.0,
+        "Equipment": 0.0,
+        "Consumables": 0.0
+      }
+    }
+  }
+}

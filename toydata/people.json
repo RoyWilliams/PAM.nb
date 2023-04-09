@@ -1,0 +1,10 @@
+{
+"cost_per_salary": 1.25,
+
+"people": {
+"Bloggs":   { 
+    "staffNumber": 114257,
+    "spine": "89",
+    "salary": 50000 
+}
+}}
