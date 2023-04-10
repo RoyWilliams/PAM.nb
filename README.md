@@ -1,4 +1,5 @@
 # PAM.nb: Python notebooks for grant managers
+## View your University of Edinburgh grants beyond People and Money
 
 This set of notebooks and supporting code is designed to help a grant manager deal with the 
 University of Edinburgh [People and Money](https://www.ed.ac.uk/staff/services-support/hr-and-finance/people-and-money-system) system. 
