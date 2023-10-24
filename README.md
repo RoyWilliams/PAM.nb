@@ -32,11 +32,11 @@ There is a useful online tool [jsonlint](https://jsonlint.com) that helps with f
 
 There are three notebooks; the HTML preview is linked:
 - **[Readme](https://htmlpreview.github.io/?https://raw.githubusercontent.com/RoyWilliams/PAM.nb/main/Readme.html)**
-This is an introduction to the PAM.nb system. First point it to the correct data directory, then it will read and check your files.
+This is an introduction to the PAM.nb system. You will need to fill in the `settings.py` file that has the directory and files. 
 
 - **[Grants](https://htmlpreview.github.io/?https://raw.githubusercontent.com/RoyWilliams/PAM.nb/main/Grants.html)**
 This is a listing of all the grants, each with graphs and tables defining where the money has gone, 
-and the futureconsequences of the assignment of people to grants.
+and the future consequences of the assignment of people to grants.
 
 - **[People](https://htmlpreview.github.io/?https://raw.githubusercontent.com/RoyWilliams/PAM.nb/main/People.html)**
 Each team member is shown with the composition of their salary from the various grants. You can check that each person 

@@ -1,30 +1,38 @@
-import sys
+import sys, re
 import grants
 import people
 import util
 import pandas as pd
 
 class transactions():
-    def __init__(self, transaction_filename, people_filename, gr, run):
-        self.gr = gr
-        self.pe = pe = people.people(people_filename)
+    def __init__(self, transaction_filename, gr, pe, run):
+        self.gr = gr.grants['grants']
+        self.pe = pe
         self.run = run
 
         projectId_to_shortName = {}
-        for k,v in gr.items():
+        for k,v in self.gr.items():
             projectId_to_shortName[v['projectId']] = k
 
-        sheet_name = 'Expenditure'
-        tr = pd.read_excel(transaction_filename, sheet_name=sheet_name)
+        # Expenditure is on Sheet2
+        sheet_name = 'Sheet2'
+        tr = pd.read_excel(transaction_filename, sheet_name=sheet_name, skiprows=2)
+
+        column_names = list(tr.columns.values)
+        #print(column_names)
+        project_id           = column_names.index('Project ID')
+        expenditure_category = column_names.index('Expenditure Category')
+        accounting_period    = column_names.index('Accounting Period')
+        gbp_amount           = column_names.index('GBP Amount')
+        comment              = column_names.index('Comment')
+
         n = len(tr.index)
-        ns = util.nameSearcher(people_filename)
-    
         expend = {}
         salary = {}
     
         for i in range(n):
             row = tr.iloc[i]
-            project  = row[0]
+            project  = row[project_id]
             if not isinstance(project, str):
                 continue
             if len(project.split('_')) != 2:
@@ -36,19 +44,28 @@ class transactions():
                 print('ERROR Unknown project Id %s!' % project)
                 continue
 
-            their_category = str(row[3])
+            their_category = str(row[expenditure_category])
             category = util.my_category(their_category)
             if not category:
                 continue
             
-            imonth   = util.getMonthIndex(row[13]) - run.istart
+            imonth   = util.getMonthIndex(row[accounting_period]) - run.istart
             if imonth < 0 or imonth >= run.nmonth:
                 continue
-            amount   = float(row[14])
+            amount   = float(row[gbp_amount])
             if amount < 0.1:
                 continue
             if category == 'Salary':
-                person = ns.findName(row[19])
+                s = row[comment]
+                q = re.findall(' [0-9][0-9]* ', s)
+                if len(q) > 0: 
+                    staff_number = int(q[0].strip())
+                else:
+                    print('ERROR: Staff number not found in comment "%s"' % s)
+                person = pe.get_person(staff_number)
+                if not person: 
+                    continue
+
                 if not person in salary: 
                     salary[person] = {}
                 if not grant in salary[person]: 
@@ -65,7 +82,7 @@ class transactions():
         self.salary = salary
 
     def print_salary(self):
-        for person in self.pe.persons:
+        for person in self.pe.people_name_set:
             print(person)
             if person not in self.salary:
                 continue
@@ -88,9 +105,11 @@ class transactions():
 
 
 if __name__ == "__main__":
+    import settings
     run = util.run('Aug-22', 'Apr-23')
-    gr = grants.grants('data/grants.json')
-    tr = transactions( 'data/transaction.xlsx', 'data/people.json', gr.grants['grants'], run)
+    gr = grants.grants    (settings.MYGRANTS)
+    pe = people.people    (settings.PEOPLE)
+    tr = transactions     (settings.TRANSACTIONS, gr, pe, run)
     tr.print_salary()
     print('------')
     tr.print_expend()

@@ -10,22 +10,23 @@ import util
 
 # make an array of actual FTE as self.forecast_fte[person][grant][i]
 class assign():
-    def __init__(self, assign_filename, grants_filename, people_filename, run):
+    def __init__(self, assign_filename, grants, people, run):
         self.run = run
-        people = json.loads(open(people_filename, 'r').read())['people']
-        grants = json.loads(open(grants_filename, 'r').read())
-        grant_names = grants['grants'].keys()
+        self.pe = people
+        self.gr = grants
+        grant_names = self.gr.all_names()
 
         forecast_fte = {}
         records = json.loads(open(assign_filename, 'r').read())
         for record in records:
             person  = record[0]
-            if not person in people:
-                print('ERROR Unknown person %s in assign file!' % person)
+            if not person in self.pe.all_names():
+                print('ERROR: name %s in assign file not recognised' % person)
                 continue
             grant = record[1]
-            if not grant in grant_names:
-                print("ERROR Unknown grant for assignment!", grant)
+            if not grant in self.gr.all_names():
+                print('ERROR: grant %s in assign file not recognised' % grant)
+                continue
             from_month = util.getMonthIndex(record[2]) - run.istart
             this_forecast_fte   = float(record[3])
             if not person in forecast_fte:
@@ -38,6 +39,8 @@ class assign():
 
     def print(self):
         for person in self.forecast_fte.keys():
+            if not person in self.pe.people_name_set:
+                continue
             print(person)
             for imonth in range(self.run.nmonth):
                 month = util.getMonthTxt(self.run.istart + imonth)
@@ -51,6 +54,10 @@ class assign():
                 print('   %s (%4.2f): %s' % (month, tot_forecast_fte, s))
 
 if __name__=="__main__":
+    import grants, people, settings
     run = util.run('Aug-22', 'Apr-23')
-    af = assign('data/assignFTE.json', 'data/grants.json', 'data/people.json', run)
+    gr = grants.grants(settings.MYGRANTS)
+    gr.from_projects  (settings.PROJECTS, settings.PROJECTS_DATE)
+    pe = people.people(settings.PEOPLE)
+    af = assign       (settings.ASSIGN, gr, pe, run)
     af.print()

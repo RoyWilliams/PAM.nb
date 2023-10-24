@@ -1,11 +1,31 @@
 import sys, json
+monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 
 ###### Converting text month (eg Jul-23) back and forth to number
 def getMonthTxt(monthIndex):
-    monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
     year = monthIndex // 12
     month = monthNames[monthIndex % 12]
     return month +'-'+ '%02d'%year
+
+def dateTimeToMonthTxt(dt):
+    # python datetime to string 31-Mar-2024
+    dt = str(dt)
+    #print('====', dt)
+    tok = dt.split()
+    if len(tok) == 2:
+        tok = tok[0].split('-')
+        year  = tok[0]
+        month = monthNames[int(tok[1])-1]
+        day   = tok[2]
+        #print('2--', year, month, day)
+    else:
+        tok = dt.split('/')
+        day   = tok[0]
+        month = monthNames[int(tok[1])-1]
+        year  = tok[2][-2:]   # reduces 2022 to 22
+        #print('1--', year, month, day)
+    monthTxt = '%02s-%03s-%4s' % (day, month, year)
+    return monthTxt
 
 def getMonthIndex(monthTxt):
     monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
@@ -14,11 +34,15 @@ def getMonthIndex(monthTxt):
         day = int(tok[0])
         month = monthNames.index(tok[1])
         year  = int(tok[2])
+        if year > 2000: year -= 2000
         if day > 20:
             month += 1
+        #print('3--', day, month, year)
     else:
+        day = 1
         month = monthNames.index(tok[0])
         year  = int(tok[1])
+        #print('2--', day, month, year)
     return year*12 + month  # month number with Jan 2000 = 1
 
 ###### The start and end of the run
@@ -70,6 +94,7 @@ class nameSearcher():
 
 category_ignore = [
     'nan',
+    'Total Award',
     'Grant Income',
     'Financial Resources',
     'Directly Allocated - Co-Principal Investigator Staff',
@@ -84,7 +109,10 @@ category_consumables = [
     'Consumables - Research Other Costs',
     'Consumables - IT',
     'Consumables - Telephone and Communication',
+    'Consumables - Printing Postage and Stationery',
+    'Consumables - Research Consumables',
     'Staff Conf Course and Seminar Fees',
+    'Other Directly Incurred',
 ]
 
 category_salary = [

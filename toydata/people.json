@@ -6,5 +6,10 @@
     "staffNumber": 114257,
     "spine": "89",
     "salary": 50000 
+},
+"Jones":   { 
+    "staffNumber": 114999,
+    "spine": "80",
+    "salary": 30000 
 }
 }}
