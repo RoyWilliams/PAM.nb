@@ -7523,13 +7523,8 @@ you can clear the cell content by selecting the cell then from the menu
 <div class="jp-InputPrompt jp-InputArea-prompt">In [1]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">settings</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">'mygrantsjson is            '</span><span class="p">,</span> <span class="n">settings</span><span class="o">.</span><span class="n">MYGRANTS</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">'projects spreadsheet is    '</span><span class="p">,</span> <span class="n">settings</span><span class="o">.</span><span class="n">PROJECTS</span><span class="p">,</span> <span class="s1">' dated '</span><span class="p">,</span> <span class="n">settings</span><span class="o">.</span><span class="n">PROJECTS_DATE</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">'people.json is             '</span><span class="p">,</span> <span class="n">settings</span><span class="o">.</span><span class="n">PEOPLE</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">'assign.json is             '</span><span class="p">,</span> <span class="n">settings</span><span class="o">.</span><span class="n">ASSIGN</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">'transactions spreadsheet is'</span><span class="p">,</span> <span class="n">settings</span><span class="o">.</span><span class="n">TRANSACTIONS</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">'This run is from'</span><span class="p">,</span> <span class="n">settings</span><span class="o">.</span><span class="n">RUN_START</span><span class="p">,</span> <span class="s1">'to'</span><span class="p">,</span> <span class="n">settings</span><span class="o">.</span><span class="n">RUN_END</span><span class="p">)</span>
+<div class="highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">util</span><span class="o">,</span> <span class="nn">settings</span>
+<span class="n">util</span><span class="o">.</span><span class="n">print_settings</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -7542,12 +7537,12 @@ you can clear the cell content by selecting the cell then from the menu
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>mygrantsjson is             toydata/mygrants.json
-projects spreadsheet is     toydata/projects.xlsx  dated  Aug-22
+<pre>mygrantsjson is             toydata/mygrants.json  dated  Nov-22
+projects spreadsheet is     toydata/projects.xlsx
 people.json is              toydata/people.json
 assign.json is              toydata/assignFTE.json
 transactions spreadsheet is toydata/transactions.xlsx
-This run is from Sep-22 to Nov-24
+This run is from Jun-22 to Mar-23
 </pre>
 </div>
 </div>
@@ -7576,8 +7571,7 @@ date of the <code>transactions.xlsx</code> file.</p>
 <div class="jp-InputPrompt jp-InputArea-prompt">In [2]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">util</span>
-<span class="n">run</span> <span class="o">=</span> <span class="n">util</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">RUN_START</span><span class="p">,</span> <span class="n">settings</span><span class="o">.</span><span class="n">RUN_END</span><span class="p">)</span>
+<div class="highlight hl-ipython3"><pre><span></span><span class="n">run</span> <span class="o">=</span> <span class="n">util</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">RUN_START</span><span class="p">,</span> <span class="n">settings</span><span class="o">.</span><span class="n">RUN_END</span><span class="p">)</span>
 <span class="n">run</span><span class="o">.</span><span class="n">print</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -7591,7 +7585,7 @@ date of the <code>transactions.xlsx</code> file.</p>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>Run is from Sep-22 to Nov-24 (26 months)
+<pre>Run is from Jun-22 to Mar-23 (9 months)
 </pre>
 </div>
 </div>
@@ -7637,7 +7631,7 @@ module people.py. You can run the cell below to see the results.</p>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>['Bloggs', 'Jones']
+<pre>['Bloggs', 'Jones', 'Vivaldi']
 </pre>
 </div>
 </div>
@@ -7666,8 +7660,13 @@ single file grants.json that is used for the plots and tables.</p>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">grants</span>
-<span class="n">gr</span> <span class="o">=</span> <span class="n">grants</span><span class="o">.</span><span class="n">grants</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">MYGRANTS</span><span class="p">)</span>
-<span class="n">gr</span><span class="o">.</span><span class="n">from_projects</span>  <span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">PROJECTS</span><span class="p">,</span> <span class="n">settings</span><span class="o">.</span><span class="n">PROJECTS_DATE</span><span class="p">)</span>
+<span class="n">gr</span> <span class="o">=</span> <span class="n">grants</span><span class="o">.</span><span class="n">grants</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">MYGRANTS</span><span class="p">,</span> <span class="n">settings</span><span class="o">.</span><span class="n">GRANTS_DATE</span><span class="p">)</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">gr</span><span class="o">.</span><span class="n">from_projects</span>  <span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">PROJECTS</span><span class="p">)</span>
+<span class="k">except</span><span class="p">:</span> <span class="k">pass</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">gr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">GRANTS</span><span class="p">)</span>
+<span class="k">except</span><span class="p">:</span> <span class="k">pass</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">gr</span><span class="o">.</span><span class="n">all_names</span><span class="p">())</span>
 <span class="c1"># Restrict attention to just these</span>
 <span class="c1">#gr.set_names(['Venice'])</span>
@@ -7724,19 +7723,19 @@ specificed in this file to override the spreadsheet from P&amp;M.</p>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>As of beginning of Aug-22
+<pre>As of beginning of Nov-22
   P&amp;M project  10446744_10446748 ToyGaia ToyGaia Data Flow System: 2021-2024 (Edinburgh 2021/2022 Element)
-   Start 31-Mar-2022, End Dec-23 (20 months)
+   Start Jan-21, End Jan-23 (24 months)
    Awarded     Spent    Category
     100000      20000   Salary
-     10000       2000   Travel
+     30000       8000   Travel
      30000       5000   Equipment
      30000       5000   Consumables
 
   P&amp;M project  11111995_11111999 Venice Reviving the Empire of Venice
-   Start 31-Jun-  22, End 31-Oct-2024 (28 months)
+   Start Jan-22, End Mar-23 (14 months)
    Awarded     Spent    Category
-    200000      10000   Salary
+    200000      30000   Salary
      30000       5000   Travel
      30000       5000   Equipment
      30000       5000   Consumables
@@ -7808,7 +7807,7 @@ Running the following cell will be helpful in editing the assignFTE.json file.</
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=406860c4">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=406860c4">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -7818,74 +7817,8 @@ Running the following cell will be helpful in editing the assignFTE.json file.</
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">assign</span>
 <span class="n">af</span> <span class="o">=</span> <span class="n">assign</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">ASSIGN</span><span class="p">,</span> <span class="n">gr</span><span class="p">,</span> <span class="n">pe</span><span class="p">,</span> <span class="n">run</span><span class="p">)</span>
-<span class="n">af</span><span class="o">.</span><span class="n">print</span><span class="p">()</span>
+<span class="c1">#af.print()</span>
 </pre></div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell-outputWrapper">
-<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
-</div>
-<div class="jp-OutputArea jp-Cell-outputArea">
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>Bloggs
-   Sep-22 (0.00): 
-   Oct-22 (1.00): 1.00 on    ToyGaia| 
-   Nov-22 (1.00): 1.00 on    ToyGaia| 
-   Dec-22 (1.00): 1.00 on    ToyGaia| 
-   Jan-23 (1.00): 1.00 on    ToyGaia| 
-   Feb-23 (1.00): 1.00 on    ToyGaia| 
-   Mar-23 (1.00): 1.00 on    ToyGaia| 
-   Apr-23 (1.00): 1.00 on    ToyGaia| 
-   May-23 (1.00): 1.00 on    ToyGaia| 
-   Jun-23 (1.00): 1.00 on    ToyGaia| 
-   Jul-23 (0.00): 
-   Aug-23 (0.00): 
-   Sep-23 (0.00): 
-   Oct-23 (0.00): 
-   Nov-23 (0.00): 
-   Dec-23 (0.00): 
-   Jan-24 (0.00): 
-   Feb-24 (0.00): 
-   Mar-24 (0.00): 
-   Apr-24 (0.00): 
-   May-24 (0.00): 
-   Jun-24 (0.00): 
-   Jul-24 (0.00): 
-   Aug-24 (0.00): 
-   Sep-24 (0.00): 
-   Oct-24 (0.00): 
-Jones
-   Sep-22 (0.00): 
-   Oct-22 (0.00): 
-   Nov-22 (0.00): 
-   Dec-22 (0.00): 
-   Jan-23 (0.00): 
-   Feb-23 (0.00): 
-   Mar-23 (0.00): 
-   Apr-23 (0.50): 0.50 on    ToyGaia| 
-   May-23 (0.50): 0.50 on    ToyGaia| 
-   Jun-23 (0.50): 0.50 on    ToyGaia| 
-   Jul-23 (1.00): 0.50 on    ToyGaia| 0.50 on     Venice| 
-   Aug-23 (1.00): 1.00 on     Venice| 
-   Sep-23 (0.00): 
-   Oct-23 (0.00): 
-   Nov-23 (0.00): 
-   Dec-23 (0.00): 
-   Jan-24 (0.00): 
-   Feb-24 (0.00): 
-   Mar-24 (0.00): 
-   Apr-24 (0.00): 
-   May-24 (0.00): 
-   Jun-24 (0.00): 
-   Jul-24 (0.00): 
-   Aug-24 (0.00): 
-   Sep-24 (0.00): 
-   Oct-24 (0.00): 
-</pre>
 </div>
 </div>
 </div>
