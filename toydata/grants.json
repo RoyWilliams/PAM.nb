@@ -1,43 +1,40 @@
 {
-  "month": "Aug-22",
-  "grants": {
-    "ToyGaia": {
-      "projectId": "10446744_10446748",
-      "fullName": "ToyGaia Data Flow System: 2021-2024 (Edinburgh 2021/2022 Element)",
-      "colour": "#FF8DC0",
-      "end": "Dec-23",
-      "start": "01-Oct-22",
-      "awarded": {
-        "Salary": 100000.0,
-        "Travel": 10000.0,
-        "Consumables": 30000.0,
-        "Equipment": 30000.0
-      },
-      "spent": {
-        "Salary": 20000.0,
-        "Travel": 2000.0,
-        "Consumables": 5000.0,
-        "Equipment": 5000.0
-      }
+  "ToyGaia": {
+    "projectId": "10446744_10446748",
+    "fullName": "ToyGaia Data Flow System: 2021-2024 (Edinburgh 2021/2022 Element)",
+    "colour": "#FF8DC0",
+    "start": "Jan-21",
+    "end": "Jan-23",
+    "awarded": {
+      "Salary": 100000.0,
+      "Travel": 30000.0,
+      "Equipment": 30000.0,
+      "Consumables": 30000.0
     },
-    "Venice": {
-      "projectId": "11111995_11111999",
-      "fullName": "Reviving the Empire of Venice",
-      "colour": "#33DDC0",
-      "start": "01-Jan-23",
-      "end": "01-Oct-24",
-      "awarded": {
-        "Salary": 200000.0,
-        "Travel": 30000.0,
-        "Consumables": 30000.0,
-        "Equipment": 30000.0
-      },
-      "spent": {
-        "Salary": 10000.0,
-        "Travel": 5000.0,
-        "Consumables": 5000.0,
-        "Equipment": 5000.0
-      }
+    "spent": {
+      "Salary": 20000.0,
+      "Travel": 8000.0,
+      "Equipment": 5000.0,
+      "Consumables": 5000.0
+    }
+  },
+  "Venice": {
+    "projectId": "11111995_11111999",
+    "fullName": "Reviving the Empire of Venice",
+    "colour": "#33DDC0",
+    "start": "Jan-22",
+    "end": "Mar-23",
+    "awarded": {
+      "Salary": 200000.0,
+      "Travel": 30000.0,
+      "Equipment": 30000.0,
+      "Consumables": 30000.0
+    },
+    "spent": {
+      "Salary": 30000.0,
+      "Travel": 5000.0,
+      "Equipment": 5000.0,
+      "Consumables": 5000.0
     }
   }
 }

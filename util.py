@@ -1,4 +1,5 @@
 import sys, json
+import settings
 monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 
 ###### Converting text month (eg Jul-23) back and forth to number
@@ -65,6 +66,7 @@ class nameSearcher():
 
     def findName(self, hint):
         line = hint.strip().lower()
+
         scoreDict = {}
         for name in self.people.keys():
             staffNumber = self.people[name]['staffNumber']
@@ -77,15 +79,14 @@ class nameSearcher():
                             scoreDict[name] += 1
                         else:
                             scoreDict[name]  = 1
-        maxName = None
+        person_name = None
         maxScore = 0
         for name,score in scoreDict.items():
             if score > maxScore:
-                maxName = name
+                person_name = name
                 maxScore = score
 
-        if maxName:    return maxName 
-        else:          return None
+        return person_name
 
 
 ###### Changing P&M expense categories to WFAU categories
@@ -141,6 +142,14 @@ def my_category(category):
     print('ERROR Unknown expenditure category! "%s"' % category)
     return None
 
+def print_settings():
+    print('mygrantsjson is            ', settings.MYGRANTS, ' dated ', settings.GRANTS_DATE)
+    print('projects spreadsheet is    ', settings.PROJECTS)
+    print('people.json is             ', settings.PEOPLE)
+    print('assign.json is             ', settings.ASSIGN)
+    print('transactions spreadsheet is', settings.TRANSACTIONS)
+    print('This run is from', settings.RUN_START, 'to', settings.RUN_END)
+
 ##########
 if __name__ == '__main__':
 
@@ -151,11 +160,14 @@ if __name__ == '__main__':
     monthTxt = getMonthTxt(imonth)
     print(monthTxt)
 
+    lines = [
+        'Oct-22 Payroll to Projects - Emp No 129091 (0.00 FTE)',
+        'Jun-23 Payroll to Projects - Emp No 124393 Cross, Nicholas James (0.58 FTE)',
+        '5_2021_1801226_Nov 21 100%  G Blow Fm Epcc'
+    ]
 
-    ns = nameSearcher('data/people.json')
-    line = 'hello this is Rob Blake here'
-    name = ns.findName(line)
-    if name:
-        print('%s --> %s' % (line.strip(), name))
-    else:
-        print('%s --> NOT FOUND' % line.strip())
+    ns = nameSearcher(settings.PEOPLE)
+    for line in lines:
+        print(line)
+        name = ns.findName(line)
+        print('--->', name)

@@ -11,5 +11,10 @@
     "staffNumber": 114999,
     "spine": "80",
     "salary": 30000 
+},
+"Vivaldi":   { 
+    "staffNumber": 114666,
+    "spine": "80",
+    "salary": 60000 
 }
 }}

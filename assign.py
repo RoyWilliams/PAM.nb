@@ -25,7 +25,7 @@ class assign():
                 continue
             grant = record[1]
             if not grant in self.gr.all_names():
-                print('ERROR: grant %s in assign file not recognised' % grant)
+#                print('ERROR: grant %s in assign file not recognised' % grant)
                 continue
             from_month = util.getMonthIndex(record[2]) - run.istart
             this_forecast_fte   = float(record[3])
@@ -56,8 +56,8 @@ class assign():
 if __name__=="__main__":
     import grants, people, settings
     run = util.run('Aug-22', 'Apr-23')
-    gr = grants.grants(settings.MYGRANTS)
-    gr.from_projects  (settings.PROJECTS, settings.PROJECTS_DATE)
+    gr = grants.grants(settings.MYGRANTS, settings.GRANTS_DATE)
+    gr.from_projects  (settings.PROJECTS)
     pe = people.people(settings.PEOPLE)
     af = assign       (settings.ASSIGN, gr, pe, run)
     af.print()

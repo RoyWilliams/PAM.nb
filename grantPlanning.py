@@ -22,8 +22,9 @@ class grants_people_assign():
 
     def __init__(self, gr, pe, an, tr, run):
         self.run = run
-        self.grant_month  = gr.grants['month'] # 'spent' means at this month
-        self.grants       = gr.grants['grants']
+        self.grant_month  = gr.grants_date     # 'spent' means at this month
+        self.grants       = gr.grants
+        self.imonth       = gr.imonth
         self.people       = pe
         self.assign       = an
         self.transactions = tr
@@ -142,9 +143,10 @@ class grants_people_assign():
                     persons.append(person)
 
         actual = {'persons': persons, 'records':[]}
-        spent = g['spent']['Salary']
+        cumulative = g['spent']['Salary']
+        spent_at_month = cumulative
         awarded = g['awarded']['Salary']
-        balance = awarded - spent
+        balance = awarded - cumulative
         for imonth in range(self.run.nmonth):
             m_record = {}
             month = util.getMonthTxt(self.run.istart + imonth)
@@ -153,20 +155,31 @@ class grants_people_assign():
             ftes = []
             for person in persons:
                 w = self.transactions.salary[person][grant_name][imonth]
-                spent += w
                 fte_cost = self.people.people[person]['fulltimeCost']
                 person_actual_fte = w / fte_cost
                 ftes.append(person_actual_fte)
                 
                 month_cost += w
-                spent      += w
+                cumulative      += w
                 balance    -= w
 
             m_record['person_month_fte'] = ftes
             m_record['month_cost'] = month_cost
-            m_record['spent']      = spent
+            m_record['spent']      = cumulative
             m_record['balance']    = balance
             actual['records'].append(m_record)
+
+        # if run start is after the month assoc with spent number
+        # then we need to correct the cumulative spend
+        spent_month    = self.imonth - self.run.istart
+#        print('Spent=%f at %d months after run start' % (spent_at_month, spent_month)) 
+        if spent_month >= self.run.nmonth: 
+            spent_month = self.run.nmonth -1
+        if spent_month > 0:
+            diff = actual['records'][spent_month]['spent'] - spent_at_month
+            for imonth in range(self.run.nmonth):
+                actual['records'][imonth]['spent'] -= diff
+
         return actual
 
     def html_actual_salary(self, grant_name):
@@ -264,12 +277,24 @@ class grants_people_assign():
         months = []
         ac = []
         cumulative = g['spent'][category]
+        spent_at_month = cumulative
         
         for imonth in range(self.run.nmonth):
             month = util.getMonthTxt(self.run.istart + imonth)
             months.append(month)
             cumulative += actual[imonth]['costs'][icategory]
             ac.append(cumulative)
+
+        # if run start is after the month assoc with spent number
+        # then we need to correct the cumulative spend
+        spent_month    = self.imonth - self.run.istart
+#        print('Spent=%f at %d months after run start for %s' % (spent_at_month, spent_month, category)) 
+        if spent_month >= self.run.nmonth:
+            spent_month = self.run.nmonth -1
+        if spent_month > 0:
+            diff = ac[spent_month] - spent_at_month
+            for imonth in range(self.run.nmonth):
+                ac[imonth] -= diff
 
         plt.plot(months, ac, 'o-', label='cumulative actual',   color='green')
         plt.axhline(0, color='black')
@@ -306,7 +331,8 @@ class grants_people_assign():
         trendmonth = [grant_istart-self.run.istart, grant_iend-self.run.istart]
         plt.plot(trendmonth, trendspend, 'o-', markersize=15, color='gray')
 
-        cumulative = g['spent']['Travel'] + g['spent']['Consumables']
+        cumulative = g['spent']['Salary'] + g['spent']['Travel'] + g['spent']['Consumables']
+        spent_at_month = cumulative
         months = []
         ac = []
         for imonth in range(self.run.nmonth):
@@ -314,6 +340,19 @@ class grants_people_assign():
             months.append(month)
             cumulative += actual_categories[imonth]['costs'][1] + actual_categories[imonth]['costs'][3]
             ac.append(actual_salary  [imonth]['spent'] + cumulative)
+
+        # if run start is after the month assoc with spent number
+        # then we need to correct the cumulative spend
+        spent_month    = self.imonth - self.run.istart
+#        print('Spent=%f at %d months after run start for STC' % (spent_at_month, spent_month)) 
+
+        if spent_month >= self.run.nmonth:
+            spent_month = self.run.nmonth -1
+        if spent_month > 0:
+            diff = ac[spent_month] - spent_at_month
+            for imonth in range(self.run.nmonth):
+                ac[imonth] -= diff
+
 
         plt.plot(months, ac, 'o-', label='cumulative actual',   color='red')
         plt.axhline(0, color='black')

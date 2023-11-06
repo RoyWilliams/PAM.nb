@@ -2,11 +2,12 @@ import sys, re
 import grants
 import people
 import util
+import settings
 import pandas as pd
 
 class transactions():
     def __init__(self, transaction_filename, gr, pe, run):
-        self.gr = gr.grants['grants']
+        self.gr = gr.grants
         self.pe = pe
         self.run = run
 
@@ -29,6 +30,8 @@ class transactions():
         n = len(tr.index)
         expend = {}
         salary = {}
+
+        ns = util.nameSearcher(settings.PEOPLE)
     
         for i in range(n):
             row = tr.iloc[i]
@@ -56,14 +59,10 @@ class transactions():
             if amount < 0.1:
                 continue
             if category == 'Salary':
-                s = row[comment]
-                q = re.findall(' [0-9][0-9]* ', s)
-                if len(q) > 0: 
-                    staff_number = int(q[0].strip())
-                else:
-                    print('ERROR: Staff number not found in comment "%s"' % s)
-                person = pe.get_person(staff_number)
+                person = ns.findName(row[comment])
+#                print('%s paid %f month %d' % (person, amount, imonth)) 
                 if not person: 
+                    print('ERROR: did not find known person in spreadsheet comment "%s"', row[comment])
                     continue
 
                 if not person in salary: 
@@ -107,7 +106,7 @@ class transactions():
 if __name__ == "__main__":
     import settings
     run = util.run('Aug-22', 'Apr-23')
-    gr = grants.grants    (settings.MYGRANTS)
+    gr = grants.grants    (settings.MYGRANTS, settings.GRANTS_DATE)
     pe = people.people    (settings.PEOPLE)
     tr = transactions     (settings.TRANSACTIONS, gr, pe, run)
     tr.print_salary()

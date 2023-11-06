@@ -1,11 +1,14 @@
 [
 ["Bloggs",    "ToyGaia",            "Oct-22", 1.0],
 ["Bloggs",    "ToyGaia",            "Jul-23", 0.0],
+
 ["Jones",     "ToyGaia",            "Apr-23", 0.5],
 ["Jones",     "ToyGaia",            "Aug-23", 0.0],
+["Jones",     "Venice",             "Jul-22", 0.5],
+["Jones",     "Venice",             "Aug-22", 1.0],
+["Jones",     "Venice",             "Sep-22", 0.0],
+["Jones",     "Venice",             "Oct-22", 1.0],
 
-["Jones",     "Venice",             "Jul-23", 0.5],
-["Jones",     "Venice",             "Aug-23", 1.0],
-["Jones",     "Venice",             "Sep-23", 0.0]
+["Vivaldi",   "Venice",             "Aug-22", 1.0]
 
 ]
