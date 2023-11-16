@@ -235,6 +235,8 @@ class grants_people_assign():
     def html_actual_categories(self, grant_name):
         g = self.grants[grant_name]
         actual = self.actual_categories(grant_name)
+        (months, ac) = self.get_actual_salary_travel_consumables(grant_name)
+
         if not actual or not 'start' in g:
             return None
 
@@ -243,15 +245,18 @@ class grants_people_assign():
         out += '<table border=1><tr><th>Month</th>'
         for category in actual['categories']:
             out += '<th>' + category + '</th>'
+        out += '<th>Cumulative STC</th>'
         out += '</tr>'
 
-        for m_record in actual['records']:
+        for imonth in range(len(actual['records'])):
+            m_record = actual['records'][imonth]
             line = '<tr color=#0000ff><td>%s</td>' % m_record['month']
             for cost in m_record['costs']:
                 if cost > 0.005:
                     line += '<td>%9.0f</td>' % cost
                 else:
                     line += '<td></td>'
+            line += '<td>%9.0f</td>' % ac[imonth]
             line += '</tr>'
             out += line
         out += '</table>'
@@ -308,38 +313,29 @@ class grants_people_assign():
         plt.title(category + ' spending for ' + grant_name)
 
 ####### PLOT ACTUAL SALARY+Travel+Consumables
-    def plot_actual_salary_travel_consumables(self, grant_name):
+    def get_actual_salary_travel_consumables(self, grant_name):
         actual_salary      = self.actual_salary(grant_name)
         actual_categories  = self.actual_categories(grant_name)
         if not actual_categories:
-            return
+            return (None, None)
         g = self.grants[grant_name]
         if not actual_salary or not 'start' in g:
-            return
+            return (None, None)
         if not 'awarded' in g:
-            return None
+            return (None, None)
         actual_salary     = actual_salary['records']
         actual_categories = actual_categories['records']
 
-        # spending at start of run and at end of grant
-        trendspend = [
-            g['spent']  ['Salary'] + g['spent']  ['Travel'] + g['spent']  ['Consumables'], 
-            g['awarded']['Salary'] + g['awarded']['Travel'] + g['awarded']['Consumables']
-        ]
-        grant_istart = util.getMonthIndex(g['start']) -1
-        grant_iend   = util.getMonthIndex(g['end'])
-        trendmonth = [grant_istart-self.run.istart, grant_iend-self.run.istart]
-        plt.plot(trendmonth, trendspend, 'o-', markersize=15, color='gray')
-
-        cumulative = g['spent']['Salary'] + g['spent']['Travel'] + g['spent']['Consumables']
-        spent_at_month = cumulative
+        cumulative_tc = g['spent']['Travel'] + g['spent']['Consumables']
+        spent_at_month = cumulative_tc + g['spent']['Salary']
         months = []
         ac = []
         for imonth in range(self.run.nmonth):
             month = util.getMonthTxt(self.run.istart + imonth)
             months.append(month)
-            cumulative += actual_categories[imonth]['costs'][1] + actual_categories[imonth]['costs'][3]
-            ac.append(actual_salary  [imonth]['spent'] + cumulative)
+            cumulative_tc += actual_categories[imonth]['costs'][1] + actual_categories[imonth]['costs'][3]
+            thismonth_stc = actual_salary  [imonth]['spent'] + cumulative_tc
+            ac.append(thismonth_stc)
 
         # if run start is after the month assoc with spent number
         # then we need to correct the cumulative spend
@@ -352,7 +348,27 @@ class grants_people_assign():
             diff = ac[spent_month] - spent_at_month
             for imonth in range(self.run.nmonth):
                 ac[imonth] -= diff
+        return (months, ac)
 
+    def plot_actual_salary_travel_consumables(self, grant_name):
+        g = self.grants[grant_name]
+        if not 'awarded' in g:
+            return None
+
+        print(g)
+        # spending at start of run and at end of grant
+        trendspend = [
+            g['spent']  .get('Salary',0) + g['spent']  .get('Travel',0) + g['spent']  .get('Consumables',0), 
+            g['awarded'].get('Salary',0) + g['awarded'].get('Travel',0) + g['awarded'].get('Consumables',0), 
+        ]
+        grant_istart = util.getMonthIndex(g['start']) -1
+        grant_iend   = util.getMonthIndex(g['end'])
+        trendmonth = [grant_istart-self.run.istart, grant_iend-self.run.istart]
+        plt.plot(trendmonth, trendspend, 'o-', markersize=15, color='gray')
+
+        (months, ac) = self.get_actual_salary_travel_consumables(grant_name)
+        if not ac:
+            return
 
         plt.plot(months, ac, 'o-', label='cumulative actual',   color='red')
         plt.axhline(0, color='black')

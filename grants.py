@@ -18,12 +18,16 @@ class grants():
 
             if not 'awarded'  in grant: 
                 grant['awarded'] = {}
-                for category in util.categories():
+
+            for category in util.categories():
+                if not category in grant['awarded']:
                     grant['awarded'][category] = 0
 
             if not 'spent'    in grant: 
                 grant['spent'] = {}
-                for category in util.categories():
+
+            for category in util.categories():
+                if not category in grant['spent']:
                     grant['spent'][category] = 0
 
             if not 'colour' in grant:
