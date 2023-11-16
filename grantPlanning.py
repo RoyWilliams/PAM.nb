@@ -237,6 +237,8 @@ class grants_people_assign():
         actual = self.actual_categories(grant_name)
         (months, ac) = self.get_actual_salary_travel_consumables(grant_name)
 
+        stc_award = g['awarded']['Salary'] + g['awarded']['Travel'] + g['awarded']['Consumables']
+
         if not actual or not 'start' in g:
             return None
 
@@ -246,6 +248,7 @@ class grants_people_assign():
         for category in actual['categories']:
             out += '<th>' + category + '</th>'
         out += '<th>Cumulative STC</th>'
+        out += '<th>Balance STC</th>'
         out += '</tr>'
 
         for imonth in range(len(actual['records'])):
@@ -257,6 +260,7 @@ class grants_people_assign():
                 else:
                     line += '<td></td>'
             line += '<td>%9.0f</td>' % ac[imonth]
+            line += '<td>%9.0f</td>' % (stc_award - ac[imonth])
             line += '</tr>'
             out += line
         out += '</table>'
