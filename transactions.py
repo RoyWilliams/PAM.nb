@@ -56,8 +56,8 @@ class transactions():
             if imonth < 0 or imonth >= run.nmonth:
                 continue
             amount   = float(row[gbp_amount])
-            if amount < 0.1:
-                continue
+#            if amount < 0.1:
+#                continue
             if category == 'Salary':
                 person = ns.findName(row[comment])
 #                print('%s paid %f month %d' % (person, amount, imonth)) 
