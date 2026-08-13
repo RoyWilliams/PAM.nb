@@ -35,7 +35,7 @@ class transactions():
     
         for i in range(n):
             row = tr.iloc[i]
-            project  = row[project_id]
+            project  = row.iloc[project_id]
             if not isinstance(project, str):
                 continue
             if len(project.split('_')) != 2:
@@ -47,19 +47,19 @@ class transactions():
                 print('ERROR Unknown project Id %s!' % project)
                 continue
 
-            their_category = str(row[expenditure_category])
+            their_category = str(row.iloc[expenditure_category])
             category = util.my_category(their_category)
             if not category:
                 continue
             
-            imonth   = util.getMonthIndex(row[accounting_period]) - run.istart
+            imonth   = util.getMonthIndex(row.iloc[accounting_period]) - run.istart
             if imonth < 0 or imonth >= run.nmonth:
                 continue
-            amount   = float(row[gbp_amount])
+            amount   = float(row.iloc[gbp_amount])
 #            if amount < 0.1:
 #                continue
             if category == 'Salary':
-                person = ns.findName(row[comment])
+                person = ns.findName(row.iloc[comment])
 #                print('%s paid %f month %d' % (person, amount, imonth)) 
                 if not person: 
                     print('ERROR: did not find known person in spreadsheet comment "%s"', row[comment])
