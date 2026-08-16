@@ -1,20 +1,6 @@
-{
-"cost_per_salary": 1.25,
-
-"people": {
-"Bloggs":   { 
-    "staffNumber": 114257,
-    "spine": "89",
-    "salary": 50000 
-},
-"Jones":   { 
-    "staffNumber": 114999,
-    "spine": "80",
-    "salary": 30000 
-},
-"Vivaldi":   { 
-    "staffNumber": 114666,
-    "spine": "80",
-    "salary": 60000 
-}
-}}
+[
+["Bloggs",       114257, "Apr-22", 50000 ],
+["Jones",        114999, "Aug-22", 30000 ],
+["Vivaldi",      114666, "Apr-22", 60000 ],
+["Jones",        114999, "Dec-22", 31000 ]
+]

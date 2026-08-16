@@ -37,7 +37,7 @@ class grants_people_assign():
                     gCost = [0.0]*run.nmonth
                     for imonth in range(run.nmonth):
                         fte = self.assign.forecast_fte[person][grant][imonth]
-                        gCost[imonth] += fte * self.people.people[person]['fulltimeCost']
+                        gCost[imonth] += fte * self.people.forecast_cost[person][imonth]
                     self.person_costs[grant][person] = gCost
 
     def html_grant_header(self, grant_name):
@@ -155,8 +155,11 @@ class grants_people_assign():
             ftes = []
             for person in persons:
                 w = self.transactions.salary[person][grant_name][imonth]
-                fte_cost = self.people.people[person]['fulltimeCost']
-                person_actual_fte = w / fte_cost
+                fte_cost = self.people.forecast_cost[person][imonth]
+                if fte_cost > 0:
+                    person_actual_fte = w / fte_cost
+                else:
+                    person_actual_fte = 0
                 ftes.append(person_actual_fte)
                 
                 month_cost += w
@@ -413,7 +416,7 @@ class grants_people_assign():
         if not person in self.transactions.salary:
             return None
         grant_names = sorted(self.transactions.salary[person].keys())
-        fte_cost = self.people.people[person]['fulltimeCost']
+        fte_cost = self.people.forecast_cost[person]
         months = []
         for imonth in range(self.run.nmonth):
             month = util.getMonthTxt(self.run.istart + imonth)
@@ -424,8 +427,9 @@ class grants_people_assign():
             colours.append(self.grants[grant_name]['colour'])
             person_grant_cost = [0.0]*self.run.nmonth
             for imonth in range(self.run.nmonth):
-                person_grant_cost[imonth] = \
-                    self.transactions.salary[person][grant_name][imonth] / fte_cost
+                if fte_cost[imonth] > 0:
+                    person_grant_cost[imonth] = \
+                    self.transactions.salary[person][grant_name][imonth] / fte_cost[imonth]
             person_grants_cost.append(person_grant_cost)
         return {
             'grant_names':grant_names, 

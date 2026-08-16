@@ -1,5 +1,6 @@
 import sys, json
 import settings
+from people import people
 monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 
 ###### Converting text month (eg Jul-23) back and forth to number
@@ -61,8 +62,12 @@ class run():
 ###### Searching for names in crap
 class nameSearcher():
     def __init__(self, people_filename):
-        people_data = json.loads(open(people_filename).read())
-        self.people = people_data['people']
+        self.people = {}
+        data = json.loads(open(people_filename).read())
+        for costChange in data:
+            person      = costChange[0]
+            staffNumber = costChange[1]
+            self.people[person] = { 'staffNumber': staffNumber }
 
     def findName(self, hint):
         line = hint.strip().lower()
