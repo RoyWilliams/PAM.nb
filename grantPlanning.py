@@ -10,13 +10,13 @@ class grants_people_assign():
 #  Spending actual by Grant by Category by Month
 #    transactions.expend[grant][category][imonth]
 #
-#  Salary FTE actual by Person and by Grant and by month
+#  Cost FTE actual by Person and by Grant and by month
 #    transactions.salary[person][grant][imonth]
 #
-#  Salary FTE forecast by Person and by Grant and by month 
+#  Cost FTE forecast by Person and by Grant and by month 
 #    assign.forecast_fte[person][grant][imonth]
 #
-#  Salary cost forecast by person and Grant and Month
+#  Cost forecast by person and Grant and Month
 #    gpa.person_costs[person][grant][imonth]
 
 
@@ -70,10 +70,10 @@ class grants_people_assign():
         g = self.grants[grant_name]
         if not 'awarded' in g:
             return None
-        if not 'Salary' in g['awarded']:
+        if not 'Human Cost' in g['awarded']:
             return None
-        awarded = g['awarded']['Salary']
-        spent   = g['spent']['Salary']
+        awarded = g['awarded']['Human Cost']
+        spent   = g['spent']['Human Cost']
         balance = awarded - spent
 
         persons = []
@@ -109,7 +109,7 @@ class grants_people_assign():
         forecast = self.forecast_salary(grant_name)
         if not forecast: return None
 
-        out = '<h3>Forecast Salary</h3>'
+        out = '<h3>Forecast Human Cost</h3>'
         out += '<table border=1><tr><th>Month</th>'
         for person in forecast['persons']:
             out += '<th>' + person + '</th>'
@@ -134,7 +134,7 @@ class grants_people_assign():
 ########## ACTUAL SALARY EXPENSE
     def actual_salary(self, grant_name):
         g = self.grants[grant_name]
-        if not 'spent' in g or not 'Salary' in g['spent']:
+        if not 'spent' in g or not 'Human Cost' in g['spent']:
             return None
         persons = []
         for person in self.people.people_name_set:
@@ -143,9 +143,9 @@ class grants_people_assign():
                     persons.append(person)
 
         actual = {'persons': persons, 'records':[]}
-        cumulative = g['spent']['Salary']
+        cumulative = g['spent']['Human Cost']
         spent_at_month = cumulative
-        awarded = g['awarded']['Salary']
+        awarded = g['awarded']['Human Cost']
         balance = awarded - cumulative
         for imonth in range(self.run.nmonth):
             m_record = {}
@@ -190,7 +190,7 @@ class grants_people_assign():
         actual = self.actual_salary(grant_name)
         if not actual: return None
 
-        out = '<h3>Salary Spending</h3>'
+        out = '<h3>Human Cost Spending</h3>'
         out += 'Grant <b>%s</b> (%s) <br/>Start %s, End %s' % (grant_name, g['projectId'], g['start'], g['end'])
         out += '<table border=1><tr><th>Month</th>'
         for person in actual['persons']:
@@ -240,7 +240,7 @@ class grants_people_assign():
         actual = self.actual_categories(grant_name)
         (months, ac) = self.get_actual_salary_travel_consumables(grant_name)
 
-        stc_award = g['awarded']['Salary'] + g['awarded']['Travel'] + g['awarded']['Consumables']
+        stc_award = g['awarded']['Human Cost'] + g['awarded']['Travel'] + g['awarded']['Consumables']
 
         if not actual or not 'start' in g:
             return None
@@ -334,7 +334,7 @@ class grants_people_assign():
         actual_categories = actual_categories['records']
 
         cumulative_tc = g['spent']['Travel'] + g['spent']['Consumables']
-        spent_at_month = cumulative_tc + g['spent']['Salary']
+        spent_at_month = cumulative_tc + g['spent']['Human Cost']
         months = []
         ac = []
         for imonth in range(self.run.nmonth):
@@ -365,8 +365,8 @@ class grants_people_assign():
         print(g)
         # spending at start of run and at end of grant
         trendspend = [
-            g['spent']  .get('Salary',0) + g['spent']  .get('Travel',0) + g['spent']  .get('Consumables',0), 
-            g['awarded'].get('Salary',0) + g['awarded'].get('Travel',0) + g['awarded'].get('Consumables',0), 
+            g['spent']  .get('Human Cost',0) + g['spent']  .get('Travel',0) + g['spent']  .get('Consumables',0), 
+            g['awarded'].get('Human Cost',0) + g['awarded'].get('Travel',0) + g['awarded'].get('Consumables',0), 
         ]
         grant_istart = util.getMonthIndex(g['start']) -1
         grant_iend   = util.getMonthIndex(g['end'])
@@ -386,7 +386,7 @@ class grants_people_assign():
 #    plt.axis(        ymax=maxspend)
         plt.ylabel("cumulative spend")
         plt.legend(loc='upper left')
-        plt.title('Salary+travel+consumables for ' + grant_name)
+        plt.title('Human cost+travel+consumables for ' + grant_name)
 
 #########  FORECAST FTE BY PERSON
     def forecast_fte_person(self, person):
@@ -491,7 +491,7 @@ class grants_people_assign():
         actual = actual['records']
 
         # spending at start of run and at end of grant
-        trendspend = [g['spent']['Salary'], g['awarded']['Salary']]
+        trendspend = [g['spent']['Human Cost'], g['awarded']['Human Cost']]
         grant_istart = util.getMonthIndex(g['start']) -1
         grant_iend   = util.getMonthIndex(g['end'])
         trendmonth = [grant_istart-self.run.istart, grant_iend-self.run.istart]
@@ -516,7 +516,7 @@ class grants_people_assign():
 #    plt.axis(        ymax=maxspend)
         plt.ylabel("cumulative spend")
         plt.legend(loc='upper left')
-        plt.title('Salary forecast/actual for ' + grant_name)
+        plt.title('Human Cost forecast/actual for ' + grant_name)
 
 if __name__ == '__main__':
     import settings
@@ -533,19 +533,19 @@ if __name__ == '__main__':
     q = gpa.html_grant_header('Venice')
     print(q)
 
-    print('\nForecast Salary')
+    print('\nForecast Human Cost')
     q = gpa.forecast_salary('Venice')
     print(q)
 
-    print('\nHTML Forecast Salary')
+    print('\nHTML Forecast Human Cost')
     q = gpa.html_forecast_salary('Venice')
     print(q)
 
-    print('\nActual Salary')
+    print('\nActual Human Cost')
     q = gpa.actual_salary('Venice')
     print(q)
 
-    print('\nHTML Actual Salary')
+    print('\nHTML Actual Human Cost')
     q = gpa.html_actual_salary('Venice')
     print(q)
 

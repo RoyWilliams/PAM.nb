@@ -21,11 +21,12 @@ class transactions():
 
         column_names = list(tr.columns.values)
         #print(column_names)
-        project_id           = column_names.index('Project ID')
+        project_id           = column_names.index('Project Number')
         expenditure_category = column_names.index('Expenditure Category')
+        originator           = column_names.index('Originator')
         accounting_period    = column_names.index('Accounting Period')
-        gbp_amount           = column_names.index('GBP Amount')
-        comment              = column_names.index('Comment')
+        gbp_amount           = column_names.index('Amount (GBP)')
+        comment              = column_names.index('Comments')
 
         n = len(tr.index)
         expend = {}
@@ -58,7 +59,7 @@ class transactions():
             amount   = float(row.iloc[gbp_amount])
 #            if amount < 0.1:
 #                continue
-            if category == 'Salary':
+            if category == 'Human Cost':
                 person = ns.findName(row.iloc[comment])
 #                print('%s paid %f month %d' % (person, amount, imonth)) 
                 if not person: 
@@ -107,7 +108,7 @@ if __name__ == "__main__":
     import settings
     run = util.run('Aug-22', 'Apr-23')
     gr = grants.grants    (settings.MYGRANTS, settings.GRANTS_DATE)
-    pe = people.people    (settings.PEOPLE)
+    pe = people.people    (settings.PEOPLE, run)
     tr = transactions     (settings.TRANSACTIONS, gr, pe, run)
     tr.print_salary()
     print('------')

@@ -95,7 +95,7 @@ class nameSearcher():
 
 
 ###### Changing P&M expense categories to WFAU categories
-#    'Salary', 'Consumables', 'Travel', 'Equipment',
+#    'Human Cost', 'Consumables', 'Travel', 'Equipment',
 # and ignoring those we arent interested in
 
 category_ignore = [
@@ -130,7 +130,7 @@ category_travel    = ['Travel and Subsistence']
 category_equipment = ['Equipment']
 
 def categories():
-    return ['Salary', 'Travel', 'Equipment', 'Consumables']
+    return ['Human Cost', 'Travel', 'Equipment', 'Consumables']
 
 def my_category(category):
     if category in category_ignore:
@@ -138,7 +138,7 @@ def my_category(category):
     if category in category_consumables:
         return 'Consumables'
     if category in category_salary:
-        return 'Salary'
+        return 'Human Cost'
     if category in category_travel:
         return 'Travel'
     if category in category_equipment:
