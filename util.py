@@ -1,6 +1,5 @@
-import sys, json
+import sys, json, re
 import settings
-from people import people
 monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 
 ###### Converting text month (eg Jul-23) back and forth to number
@@ -69,30 +68,37 @@ class nameSearcher():
             staffNumber = costChange[1]
             self.people[person] = { 'staffNumber': staffNumber }
 
-    def findName(self, hint):
-        line = hint.strip().lower()
+    def findName(self, row):
+# Given a row from the transactions file, we need to know if its a "human cost"
+# meaning salary + overheads
+# and if so the last name of who is getting the salary
+        originator = str(row['Originator'])
+        comments = str(row['Comments'])
+        otr = str(row['Original Transaction Reference'])
+        staffNumber = 0
 
-        scoreDict = {}
-        for name in self.people.keys():
-            staffNumber = self.people[name]['staffNumber']
-            if name.lower() in line or str(staffNumber) in line:
-                scoreDict[name] = 1
-            if 'otherNames' in self.people[name]:
-                for otherName in self.people[name]['otherNames']:
-                    if otherName.lower() in line:
-                        if name in scoreDict.keys():
-                            scoreDict[name] += 1
-                        else:
-                            scoreDict[name]  = 1
-        person_name = None
-        maxScore = 0
-        for name,score in scoreDict.items():
-            if score > maxScore:
-                person_name = name
-                maxScore = score
+        if originator == 'nan':
+            return None
 
-        return person_name
+        originator_tok = originator.split(',')
+        last_name = originator_tok[0].strip()
+        first_name = originator_tok[1].strip()
 
+        if otr.startswith('426_'):
+            matches = re.findall(r'E\d+', otr)
+            if len(matches) > 0:
+                staffNumber = int(matches[0][1:])
+
+        if comments.find(last_name) >= 0:
+            matches = re.findall(r'\d{4,}', comments)
+            if len(matches) > 0:
+                staffNumber = int(matches[0])
+
+        person = last_name
+        if self.people[person]['staffNumber'] == staffNumber:
+            return person
+        else:
+            return None
 
 ###### Changing P&M expense categories to WFAU categories
 #    'Human Cost', 'Consumables', 'Travel', 'Equipment',
@@ -154,25 +160,3 @@ def print_settings():
     print('assign.json is             ', settings.ASSIGN)
     print('transactions spreadsheet is', settings.TRANSACTIONS)
     print('This run is from', settings.RUN_START, 'to', settings.RUN_END)
-
-##########
-if __name__ == '__main__':
-
-    monthTxt = 'Dec-22'
-    print(monthTxt)
-    imonth = getMonthIndex(monthTxt)
-    print(imonth)
-    monthTxt = getMonthTxt(imonth)
-    print(monthTxt)
-
-    lines = [
-        'Oct-22 Payroll to Projects - Emp No 129091 (0.00 FTE)',
-        'Jun-23 Payroll to Projects - Emp No 124393 Cross, Nicholas James (0.58 FTE)',
-        '5_2021_1801226_Nov 21 100%  G Blow Fm Epcc'
-    ]
-
-    ns = nameSearcher(settings.PEOPLE)
-    for line in lines:
-        print(line)
-        name = ns.findName(line)
-        print('--->', name)

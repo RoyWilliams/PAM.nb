@@ -36,14 +36,15 @@ class people():
                 
     def print(self):
         print('Monthly cost per full-time person\n')
-        print('Each line is: Name and Cost per month')
+        print('Each line is: Name, staffNUmber, Cost per month at start and end of run')
         for person in self.people.keys():
-            for imonth in range(self.run.nmonth):
-                cost = self.forecast_cost[person][imonth]
-                if cost > 0:
-                    month = util.getMonthTxt(self.run.istart + imonth)
-                    print('%12s %7s £%5.0f' % \
-                        (person, month, self.forecast_cost[person][imonth]))
+            staffNumber = self.people[person]['staffNumber']
+            month0 = util.getMonthTxt(self.run.istart)
+            cost0 = self.forecast_cost[person][0]
+            month1 = util.getMonthTxt(self.run.istart + self.run.nmonth-1)
+            cost1 = self.forecast_cost[person][self.run.nmonth-1]
+            print('%15s %6d %7s £%5.0f to %7s £%5.0f' % \
+                (person, staffNumber, month0, cost0, month1, cost1))
 
     def all_names(self):
         return list(self.people.keys())

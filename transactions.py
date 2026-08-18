@@ -60,7 +60,7 @@ class transactions():
 #            if amount < 0.1:
 #                continue
             if category == 'Human Cost':
-                person = ns.findName(row.iloc[comment])
+                person = ns.findName(row)
 #                print('%s paid %f month %d' % (person, amount, imonth)) 
                 if not person: 
                     print('ERROR: did not find known person in spreadsheet comment "%s"', row[comment])
