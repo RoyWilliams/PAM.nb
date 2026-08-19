@@ -24,7 +24,7 @@ class transactions():
         project_id           = column_names.index('Project Number')
         expenditure_category = column_names.index('Expenditure Category')
         originator           = column_names.index('Originator')
-        accounting_period    = column_names.index('Accounting Period')
+        expenditure_date     = column_names.index('Expenditure Item Date')
         gbp_amount           = column_names.index('Amount (GBP)')
         comment              = column_names.index('Comments')
 
@@ -53,7 +53,7 @@ class transactions():
             if not category:
                 continue
             
-            imonth   = util.getMonthIndex(row.iloc[accounting_period]) - run.istart
+            imonth   = util.getMonthIndex(row.iloc[expenditure_date]) - run.istart
             if imonth < 0 or imonth >= run.nmonth:
                 continue
             amount   = float(row.iloc[gbp_amount])
@@ -89,8 +89,10 @@ class transactions():
             for grant in self.salary[person].keys():
                 print('  ' + grant)
                 for imonth in range(self.run.nmonth):
-                    month = util.getMonthTxt(self.run.istart + imonth)
-                    print('    %8s %12.0f' % (month, self.salary[person][grant][imonth]))
+                    sal_this = self.salary[person][grant][imonth]
+                    if sal_this > 0:
+                        month = util.getMonthTxt(self.run.istart + imonth)
+                        print('    %8s %12.0f' % (month, sal_this))
 
     def print_expend(self):
         for grant in self.gr.keys():

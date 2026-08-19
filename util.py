@@ -30,20 +30,43 @@ def dateTimeToMonthTxt(dt):
 
 def getMonthIndex(monthTxt):
     monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-    tok = monthTxt.split('-')
-    if len(tok) == 3:   # day-month-year
-        day = int(tok[0])
-        month = monthNames.index(tok[1])
-        year  = int(tok[2])
+    monthTxt = str(monthTxt)
+#    print(monthTxt, end = ':')
+    tokd  = monthTxt.split('-')
+    toks  = monthTxt.split('/')
+    tokc = monthTxt.split(':')
+
+    if len(tokc) > 1:         # excel date-time 2022-07-28 00:00:00:
+        tokd  = monthTxt.split(' ')[0].split('-')
+        year  = int(tokd[0])
+        month = int(tokd[1])
+        day   = int(tokd[2])
         if year > 2000: year -= 2000
-        if day > 20:
-            month += 1
-        #print('3--', day, month, year)
-    else:
+#        print('y-m-d', year, month, day)
+
+    elif len(tokd) == 3:   # string 2022-07-28
+        day = int(tokd[0])
+        month = monthNames.index(tokd[1])
+        year  = int(tokd[2])
+        if year > 2000: year -= 2000
+#        print('d-m-y', day, month, year)
+
+    elif len(tokd) == 2:   # string Jan-22
         day = 1
-        month = monthNames.index(tok[0])
-        year  = int(tok[1])
-        #print('2--', day, month, year)
+        month = monthNames.index(tokd[0]) + 1
+        year  = int(tokd[1])
+#        print('m-y', day, month, year)
+
+    elif len(toks) == 3:   # string 28/09/2022
+        day = int(toks[0])
+        month = int(toks[1]) + 1
+        year  = int(toks[2]) - 2000
+        print('d/m/y', day, month, year)
+
+    else:
+        print(f'Cannot read data from {monthTxt}')
+        return None
+            
     return year*12 + month  # month number with Jan 2000 = 1
 
 ###### The start and end of the run

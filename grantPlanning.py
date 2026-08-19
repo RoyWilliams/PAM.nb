@@ -362,7 +362,6 @@ class grants_people_assign():
         if not 'awarded' in g:
             return None
 
-        print(g)
         # spending at start of run and at end of grant
         trendspend = [
             g['spent']  .get('Human Cost',0) + g['spent']  .get('Travel',0) + g['spent']  .get('Consumables',0), 
