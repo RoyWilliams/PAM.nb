@@ -8,8 +8,8 @@
     "awarded": {
       "Human Cost": 60000.0,
       "Travel": 10000.0,
-      "Equipment": 5000.0,
-      "Consumables": 5000.0
+      "Equipment": 10000.0,
+      "Consumables": 10000.0
     },
     "spent": {
       "Human Cost": 20000.0,
