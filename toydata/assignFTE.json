@@ -1,14 +1,13 @@
 [
-["Bloggs",    "ToyGaia",            "Oct-22", 1.0],
-["Bloggs",    "ToyGaia",            "Jul-23", 0.0],
+["Bloggs",    "ToyGaia",            "Aug-22", 1.0],
+["Bloggs",    "ToyGaia",            "Feb-23", 0.0],
 
-["Jones",     "ToyGaia",            "Apr-23", 0.5],
-["Jones",     "ToyGaia",            "Aug-23", 0.0],
-["Jones",     "Venice",             "Jul-22", 0.5],
-["Jones",     "Venice",             "Aug-22", 1.0],
-["Jones",     "Venice",             "Sep-22", 0.0],
-["Jones",     "Venice",             "Oct-22", 1.0],
+["Jones",     "ToyGaia",            "Mar-22", 0.5],
+["Jones",     "ToyGaia",            "Sep-22", 0.0],
+["Jones",     "Venice",             "Mar-22", 0.5],
+["Jones",     "Venice",             "Sep-22", 1.0],
 
-["Vivaldi",   "Venice",             "Aug-22", 1.0]
+["Vivaldi",   "Venice",             "Mar-22", 1.0],
+["Vivaldi",   "Venice",             "Jul-22", 0.0]
 
 ]
